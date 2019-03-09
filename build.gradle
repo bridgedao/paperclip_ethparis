@@ -1,7 +1,14 @@
-plugins {
-    id 'java'
-    id 'org.web3j' version '0.1.6'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.web3j:web3j-gradle-plugin:4.0.3'
+    }
 }
+
+apply plugin: 'org.web3j'
+apply plugin: 'java'
 
 group 'org.web3j'
 version '0.1.1'
@@ -24,6 +31,7 @@ ext {
 
 dependencies {
     compile "ch.qos.logback:logback-core:$logbackVersion",
-            "ch.qos.logback:logback-classic:$logbackVersion"
+            "ch.qos.logback:logback-classic:$logbackVersion",
+            "org.web3j:quorum:4.0.6"
     testCompile "junit:junit:$junitVersion"
 }

@@ -3,7 +3,16 @@ Trustless access to bank account for dapps.
 
 Users of Paperclip are dapps that offer simple services who want to be accessible to users who don't hold any cryptocurrency.This concept is a result of long iterative development of the idea of a decentralized bank.
 
-**It is not cryptocurrency onramp.**
+**It is not a cryptocurrency on-ramp. It doesn't facilitate purchases of financial instruments. The reason for this is to avoid the KYC/AML regulations which are heavily focused on purchases of financial instruments. We confirmed this with Limepay, Maker and our lawyers.** 
+
+The concept was first publicly written about [here](https://forum.aragon.org/t/collateralized-dao-proxy-services-as-an-aragon-network-use-case/137)
+
+It combines multiple ideas already in work into one singular tool:
+- **Legal entity as a service**, example: [Opencollective](https://opencollective.com/)
+- **Collateralized positions**, example: Maker CDP
+- **Fiat initiated transaction relayers**, example [Limepay](https://limepay.com)
+- **Slashing of stake**, example Ethereum Casper
+
 
 ## What it does
 It provides simple and trustless bank account integration to dapps. Dapp builder can easily integrate credit card payments without having to sacrifice privacy or decentralization (as is the case when hooking up personal bank account) or spend money and time on setting up business and a business bank account.
@@ -39,5 +48,3 @@ We made a solidity smart contract that manages all the interactions and keeps th
 ## What do you need to run it
 1. Set up local Quorum network with 7 nodes: https://github.com/jpmorganchase/quorum-examples
 2. Install Chainlink and connect it to the one of the nodes.
-
-## What will run (demo)

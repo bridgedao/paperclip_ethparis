@@ -764,17 +764,33 @@ contract Ownable {
 
 // File: ../examples/ropsten/contracts/RopstenConsumerBase.sol
 
+interface PaperclipInterface {
+    function deposit(bytes32 email, bytes32 txId) public;
+}
+
 contract Consumer is Chainlinked, Ownable {
     uint256 constant private ORACLE_PAYMENT = 1 * LINK; // solium-disable-line zeppelin/no-arithmetic-operations
 
     uint256 public currentPrice;
     int256 public changeDay;
     bytes32 public lastMarket;
+    PaperclipInterface paperclipInterface;
 
-    event RequestEthereumPriceFulfilled(
-        bytes32 indexed requestId,
-        uint256 indexed price
+    function setPaperclipInterface(address paperclipAddress) {
+        paperclipInterface = PaperclipInterface(paperclipAddress);
+    }
+
+
+    event RequestPaypalRefundFulfilled(
+        bytes32 indexed email,
+        bytes32 indexed txId
     );
+
+    event RequestPaypalDepositFulfilled(
+        bytes32 indexed email,
+        bytes32 indexed txId
+    );
+
 
     event RequestEthereumChangeFulfilled(
         bytes32 indexed requestId,
@@ -791,14 +807,14 @@ contract Consumer is Chainlinked, Ownable {
         setLinkToken(_token);
     }
 
-    function requestEthereumPrice(string _jobId, string _currency)
+    function requestPaypalRefund(string _jobId, bytes32 _txId)
     public
     onlyOwner
     {
-        Chainlink.Request memory req = newRequest(stringToBytes32(_jobId), this, this.fulfillEthereumPrice.selector);
+        Chainlink.Request memory req = newRequest(stringToBytes32(_jobId), this, this.fulfillPaypalRefund.selector);
         req.add("url", "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,EUR,JPY");
         string[] memory path = new string[](1);
-        path[0] = _currency;
+        path[0] = "USD";
         req.addStringArray("path", path);
         req.addInt("times", 100);
         chainlinkRequest(req, ORACLE_PAYMENT);
@@ -835,12 +851,24 @@ contract Consumer is Chainlinked, Ownable {
         chainlinkRequest(req, ORACLE_PAYMENT);
     }
 
-    function fulfillEthereumPrice(bytes32 _requestId, uint256 _price)
+    function fulfillPaypalRefund(bytes32 _requestId, uint256 _price)
     public
     recordChainlinkFulfillment(_requestId)
     {
-        emit RequestEthereumPriceFulfilled(_requestId, _price);
+        emit RequestPaypalRefundFulfilled(email, txId);
         currentPrice = _price;
+    }
+
+    bytes32 email;
+    bytes32 txId;
+
+    function fulfillPaypalDeposit(bytes32 _email, bytes32 _txId)
+    public
+    {
+        email = _email;
+        txId = _txId;
+        // paperclipInterface.deposit(_email, _txId);
+        emit RequestPaypalDepositFulfilled(_email, _txId);
     }
 
     function fulfillEthereumChange(bytes32 _requestId, int256 _change)

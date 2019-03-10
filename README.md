@@ -1,13 +1,23 @@
 # Paperclip Lite
 Trustless access to bank account for dapps.
 
-## Inspiration
-The concept is a result of long iterative development of the idea of a decentralized bank.
+Users of Paperclip are dapps that offer simple services who want to be accessible to users who don't hold any cryptocurrency.This concept is a result of long iterative development of the idea of a decentralized bank.
+
+**It is not cryptocurrency onramp.**
 
 ## What it does
-It provides simple and trustless bank account integration to dapps. Dapp builder can as easily integrate credit card payments as token payment, without having to sacrifice privacy or decentralization (as is the case when hooking up personal bank account) or spend money and time on setting up business and a business bank account.
+It provides simple and trustless bank account integration to dapps. Dapp builder can easily integrate credit card payments without having to sacrifice privacy or decentralization (as is the case when hooking up personal bank account) or spend money and time on setting up business and a business bank account.
 
-It has a Paypal account which can take all the credit card payments directly from dapp front end. Dapp can then spend it’s fiat balance by sending a transaction to Paperclip dapp. Paypal account owner has to add stake into Paperclip (in cryptocurrency) which gets taken away in case he tries to run away with money. Paypal account owner gets to keep a fee for every successful transaction.
+### Steps
+1. Dapp customer interacts with payment gateway (through a widget) directly on dapp fronted.
+2. When a fiat transaction is received to the bank account, webhook send notification to API.
+3. API communicates this to Chainlink node.
+4. Chainlink node updates the fiat balance of dapp in Paperclip smart contract.
+5. Dapp can then spend its fiat balance by sending a private transaction to Paperclip dapp and including important payment details (receiver, amount, invoice details).
+6. Paperclip checks the requrements and sends the transaction instruction to Chainlink which triggers the transaction using Paypal API.
+7. Paypal account owner has to add stake into Paperclip in cryptocurrency.
+8. If spend (refund) transaction is successful, the fiat balance in Paperclip is updated. And Paypal account owner gets to keep a fee for every successful transaction.
+9. If spend (refund) transaction is unsuccessful, stake is automatically taken away and sent to dapp address.
 
 ## Transaction flow diagram:
 1. Deposit
